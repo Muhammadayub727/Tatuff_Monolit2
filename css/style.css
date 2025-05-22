@@ -1,67 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  html, body {
-    height: 100%;
-  }
-  
-  .container {
-    height: 100vh;
-    width: 100vw;
-    background-color: #171C28;
-    display: flex;
-    color: white;
-    font-size: 2rem;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    overflow-x: hidden; /* Gorizontal scrollni yashirish */
-}
-  /* Header section */
-  .header {
-    width: 100vw;
-    background-color: #4a64e0; /* fon rangi */
-  }
-  
-  .header_section {
-    display: flex;
-    align-items: center;
-    padding: 1rem 2rem;
-  }
-  
-  .logo {
-    width: 3rem;
-    height: 3rem;
-    margin-left: 6rem;
-  }
-  
-  .title {
-    font-weight: bold;
-    margin-left: 1rem;
-  }
-  
-  .sign-in {
-    font-weight: bold;
-    justify-content: flex-end;
-    margin-left: auto;
-    margin-right: 1rem;    
-  }
-  
-  .radio_buttons {
-    width: 2.5rem;
-    height: 2.5rem;
-    background-color: #cdc9c9;
-    border-radius: 50%;
-    margin-right: 6rem;
-  }
-  
-  .user {
-    width: 2rem;
-    height: 2rem;
-    justify-content: center;
-    margin-left: 4px;
-    margin-top: 4px;
-  }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        height: 100%;
+    }
+    
+    .container {
+        height: 100vh;
+        width: 100vw;
+        background-color: #171C28;
+        display: flex;
+        color: white;
+        font-size: 2rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        overflow-x: hidden; /* Gorizontal scrollni yashirish */
+    }
+    /* Header section */
+    .header {
+        width: 100vw;
+        background-color: #4a64e0; /* fon rangi */
+    }
+    
+    .header_section {
+        display: flex;
+        align-items: center;
+        padding: 1rem 2rem;
+    }
+    
+    .logo {
+        width: 3rem;
+        height: 3rem;
+        margin-left: 6rem;
+    }
+    
+    .title {
+        font-weight: bold;
+        margin-left: 1rem;
+    }
+    
+    .sign-in {
+        font-weight: bold;
+        justify-content: flex-end;
+        margin-left: auto;
+        margin-right: 1rem;    
+    }
+    
+    .radio_buttons {
+        width: 2.5rem;
+        height: 2.5rem;
+        background-color: #cdc9c9;
+        border-radius: 50%;
+        margin-right: 6rem;
+    }
+    
+    .user {
+        width: 2rem;
+        height: 2rem;
+        justify-content: center;
+        margin-left: 4px;
+        margin-top: 4px;
+    }
