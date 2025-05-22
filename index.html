@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tatuff_Monolit2</title>
-  <link rel="icon" href="./images/tatuff.png" type="image/x-icon" />
   <link rel="stylesheet" href="./css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
   <div class="container">
+    <!-- Header -->
     <header class="header">
       <div class="header_section">
         <img src="./images/tatuff.png" alt="Logo" class="logo" />
@@ -21,24 +21,47 @@
       </div>
     </header>
 
+    <!-- Header content -->
     <div class="header_content">
       <p class="header_text">O'quv ishlari bo‘yicha</p>
     </div>
 
+    <!-- Main content -->
     <main class="content">
       <div class="content_left">
         <div class="plus-icon" id="addCardButton">
-            <span class="plus-sign">+</span>
+          <span class="plus-sign">+</span>
+        </div>
+
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal" id="teacherModal">
+              <h2 style="color: white;">O'qituvchi qo'shish</h2>
+              <form id="teacherForm">
+                <input type="text" id="firstName" placeholder="First Name" required  class="form_input"/>
+                <input type="text" id="surname" placeholder="SurName" required  class="form_input"/>
+                <input type="tel" id="phoneNumber" placeholder="+998 __ ___ __ __" required class="form_input" />
+                <input type="file" id="photoUpload" accept="image/*" required  class="form_input"/>
+                <button type="submit" style="background-color: #4a64e0; color: white; margin-left: 200px;">Qo'shish</button>
+              </form>
+            </div>
+          </div>
+
+        <div class="teacher-list" id="teacherList">
+          
         </div>
       </div>
-      <div class="content_right">
-        <p>O‘ng bo‘lim (asosiy ma’lumot, rasmlar va boshqalar)</p>
+
+      <div class="content_right" id="teacherDetail">
+        <div class="top">   </div>
+        <div class="bottom"></div>
       </div>
     </main>
-
+    
     <footer class="footer">
-      <p>&copy; 2025 Tatuff. Barcha huquqlar himoyalangan.</p>
-    </footer>
+        <p>&copy; 2025 Tatuff. Barcha huquqlar himoyalangan.</p>
+      </footer>
   </div>
+
+  <script src="./js/script.js"></script>
 </body>
 </html>

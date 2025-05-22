@@ -85,8 +85,8 @@ html, body {
   text-align: center;
   height: 30px;
   display: flex;
-  /* align-items: center;
-  justify-content: center; */
+  align-items: center;
+  justify-content: center;
 }
 
 .header_text {
@@ -110,6 +110,9 @@ html, body {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
   flex: 1;
   min-height: 400px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .content_left {
@@ -119,53 +122,168 @@ html, body {
 .content_right {
   flex: 0.65;
 }
+
+/* + icon */
 .plus-icon {
-    position: absolute;
-    margin-left: 28%;
-    margin-top: 28%;
-    width: 50px;
-    height: 50px;
-    background-color: #232935;
-    border-radius: 50%;
-    color: white;
-    font-size: 28px;
+  position: fixed; /* fixed pozitsiya */
+  margin-left: 28%;
+  margin-top: 28%;
+  width: 50px;
+  height: 50px;
+  background-color: #232935;
+  border-radius: 50%;
+  color: white;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.plus-icon:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+  transform: scale(1.1);
+}
+
+/* Teacher cards in left panel */
+.teacher-list {
+  margin-top: 70px; /* + icon dan pastroq boshlanishi uchun */
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.teacher-card {
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #394056;
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: background 0.3s ease;
+  user-select: none;
+}
+
+.teacher-card:hover {
+  background-color: #4a64e0;
+}
+
+/* ==== Modal styles ==== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: #1d222f;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.modal h2 {
+  margin-bottom: 1rem;
+}
+
+.modal input[type="text"],
+.modal input[type="tel"],
+.modal input[type="file"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 2px solid red;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.modal input:valid {
+  border-color: #4a64e0;
+}
+
+.modal button {
+  padding: 0.7rem;
+  font-weight: 700;
+  font-size: 1rem;
+  background-color: #4a64e0;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: #3a50b5;
+}
+
+/* Teacher detail on right panel */
+#teacherDetail .teacher-info {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.teacher-meta {
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition:all 0.3s ease;
-    z-index: 10;
-  }
-
-  .plus-icon:hover {
-    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.5);
-    transform: scale(1.02);
-    transition: all 0.4s ease;
-    }
-
-
-
-/* ===== FOOTER ===== */
-.footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #1d222f;
-  font-size: 0.9rem;
-  color: #999;
+    gap: 10px;
+    
 }
-/* ===== RESPONSIVE ===== */
+
+.teacher-meta img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #4a64e0;
+}
+
+.teacher-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+  gap: 8px;
+  padding-left: 15px;
+}
+
+.teacher-text p {
+  margin: 0;
+  font-size: 16px;
+  color: #f0f0f0;
+}
+
+.form_input {
+  padding: 10px;
+  margin-bottom: 10px;
+  /* border: 1px solid #ccc; */
+  font-size: 16px;
+  border-radius: 5px;
+  outline: none;
+  width: 300px;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .header_section {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .sign-in,
-  .radio_buttons {
-    margin-top: 0.5rem;
-  }
-
   .content {
     flex-direction: column;
     padding: 10px;
@@ -176,4 +294,18 @@ html, body {
     width: 100%;
     min-height: 300px;
   }
+
+  .plus-icon {
+    right: 15px;
+    bottom: 15px;
+  }
+
 }
+
+.footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #1d222f;
+    font-size: 0.9rem;
+    color: #999;
+  }
