@@ -165,8 +165,8 @@ function renderTeacherList() {
       <div class="status-dot"></div>
       <strong>${teacher.firstName}</strong>
       <div class="action-buttons">
-      <span onclick=editTeacher(${index}) class="material-symbols-outlined" style=" color: #FFA500; position: fixed;">edit</span>
-      <span onclick=deleteTeacher(${index}) class="material-symbols-outlined" style="color: red;position: fixed; ">delete</span>
+      <span onclick=editTeacher(${index}) class="material-symbols-outlined" style=" color: #FFA500; position: fixed;margin-left: 20px;">edit</span>
+      <span onclick=deleteTeacher(${index}) class="material-symbols-outlined" style="color: red;position: fixed; margin-left: 30px;">delete</span>
       
       </div>
     `;
