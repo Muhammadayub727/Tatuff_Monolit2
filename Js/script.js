@@ -165,8 +165,8 @@ function renderTeacherList() {
       <div class="status-dot"></div>
       <strong>${teacher.firstName}</strong>
       <div class="action-buttons">
-      <span onclick=editTeacher(${index}) class="material-symbols-outlined" style=" margin-left:350px; color: #FFA500; position: fixed;">edit</span>
-      <span onclick=deleteTeacher(${index}) class="material-symbols-outlined" style="color: red;position: fixed; margin-left: 370px;">delete</span>
+      <span onclick=editTeacher(${index}) class="material-symbols-outlined" style=" color: #FFA500; position: fixed;">edit</span>
+      <span onclick=deleteTeacher(${index}) class="material-symbols-outlined" style="color: red;position: fixed; ">delete</span>
       
       </div>
     `;
@@ -189,9 +189,27 @@ function renderTeacherList() {
 
 function renderTeacherDetail() {
   if (selectedTeacherIndex === null) {
-    teacherDetail.innerHTML = '<p>O\'qituvchi tanlang</p>';
+    document.querySelector('.right_top').innerHTML = "<p>O'qituvchi tanlang</p>";
+    document.querySelector('.right_bottom').innerHTML = "";
     return;
   }
+
+  const teacher = teachers[selectedTeacherIndex];
+
+  document.querySelector('.right_top').innerHTML = `
+    <div class="teacher-meta">
+      <img src="${teacher.photoURL}" alt="Teacher photo" style="width:100px;height:100px;border-radius:50%;">
+      <div class="teacher-text">
+        <p><strong>Ism:</strong> ${teacher.firstName} ${teacher.surname}</p>
+        <p><strong>Telefon:</strong> ${teacher.phoneNumber}</p>
+      </div>
+    </div>
+  `;
+
+  document.querySelector('.right_bottom').innerHTML = `
+    <p>Qo‘shimcha ma’lumotlar joyi (agar kerak bo‘lsa)</p>
+  `;
+}
 
   const teacher = teachers[selectedTeacherIndex];
   teacherDetail.innerHTML = `
@@ -205,7 +223,7 @@ function renderTeacherDetail() {
       </div>
     </div>
   `;
-}
+
 
 function editTeacher(index) {
   openModal(index);
