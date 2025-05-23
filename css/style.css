@@ -89,10 +89,37 @@ html, body {
   justify-content: center;
 }
 
-.header_text {
-  font-size: 14px;
-  color: #e0e0e0;
+.header_content {
+  background-color: #232935;
+  padding: 20px;
+  text-align: center;
 }
+
+.header_tabs {
+  display: inline-flex; /* centerda turadi */
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.header_tabs li {
+  padding: 10px;
+  color: white;
+  background-color: transparent; /* o‘z backgroundi bo‘lmasin */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.header_tabs li:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* hoverda engil ko‘rinish */
+}
+
+/* .header_tabs li.active {
+  background-color: #4a64e0;
+} */
+
 
 /* ===== MAIN CONTENT ===== */
 .content {
