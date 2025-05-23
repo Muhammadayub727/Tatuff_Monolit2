@@ -165,8 +165,8 @@ function renderTeacherList() {
       <div class="status-dot"></div>
       <strong>${teacher.firstName}</strong>
       <div class="action-buttons">
-      <button onclick=editTeacher(${index}) class="material-symbols-outlined">edit</button>
-      <button onclick=deleteTeacher(${index}) class="material-symbols-outlined">delete</button>
+      <span onclick=editTeacher(${index}) class="material-symbols-outlined" style=" margin-left:350px; color: #FFA500; position: fixed;">edit</span>
+      <span onclick=deleteTeacher(${index}) class="material-symbols-outlined" style="color: red;position: fixed; margin-left: 370px;">delete</span>
       
       </div>
     `;
@@ -197,7 +197,7 @@ function renderTeacherDetail() {
   teacherDetail.innerHTML = `
     <div class="teacher-info">
       <div class="teacher-meta">
-        <img src="${teacher.photoURL}" alt="Teacher photo" style="width:100px;height:100px;border-radius:50%;">
+        <img src="${teacher.photoURL}" alt="Teacher photo" style="width:200px;height:250px;">
         <div class="teacher-text">
           <p><strong>Ism:</strong> ${teacher.firstName} ${teacher.surname}</p>
           <p><strong>Telefon:</strong> ${teacher.phoneNumber}</p>
