@@ -240,3 +240,5 @@ window.addEventListener('load', () => {
   loadTeachersFromLocalStorage();
   teacherDetail.innerHTML = "<p>O'qituvchi tanlang</p>";
 });
+
+
