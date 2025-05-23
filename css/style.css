@@ -164,6 +164,7 @@ html, body {
   text-transform: capitalize;
   transition: background 0.3s ease;
   user-select: none;
+  display: flex;
 }
 
 .teacher-card:hover {
