@@ -11,9 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileDetailsContainer = document.getElementById('fileDetailsContainer');
 
   // "O‘quv ishlari bo‘yicha" (Learning Activities) elements
-  const allFilesList = document.getElementById('allFilesList');
-  const simplifiedFilesList = document.getElementById('simplifiedFilesList');
-  const selectedFileDetail = document.getElementById('selectedFileDetail');
+  const educationalFilesList = document.getElementById('educationalFilesList'); // Renamed from allFilesList
+  const educationalFileDetailArea = document.getElementById('educationalFileDetailArea'); // Renamed from selectedFileDetail
 
   // Modal elements
   const deleteModalOverlay = document.getElementById('deleteModalOverlay');
@@ -375,64 +374,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderEducationalContent() {
       // Render the detailed list of files on the left panel
-      allFilesList.innerHTML = ''; // Clear previous content
-      simplifiedFilesList.innerHTML = '';
-      selectedFileDetail.innerHTML = '<h3>Fayl haqida ma\'lumot</h3><p>Yuqoridagi ro\'yxatdan fayl tanlang.</p>'; // Reset detail area
+      educationalFilesList.innerHTML = ''; // Clear previous content
+      educationalFileDetailArea.innerHTML = '<h3>Tanlangan fayl ma\'lumotlari</h3><p>Fayl tanlang.</p>'; // Reset detail area
 
       if (uploadedFiles.length === 0) {
-          allFilesList.innerHTML += '<p>Hali yuklangan fayllar yo\'q.</p>';
-          simplifiedFilesList.innerHTML += '<p>Hali yuklangan fayllar yo\'q.</p>';
+          educationalFilesList.innerHTML += '<p>Hali yuklangan fayllar yo\'q.</p>';
           return;
       }
 
-      // Left Panel: All Files Detailed
-      uploadedFiles.forEach(file => {
-          let blobUrl = '#';
-          let downloadLinkHtml = '<span style="color: #999;">Yuklab olish mavjud emas</span>';
-
-          if (file.base64Data) {
-              const fileBlob = base64toBlob(file.base64Data, getMimeType(file.fileName));
-              if (fileBlob) {
-                  blobUrl = URL.createObjectURL(fileBlob);
-                  downloadLinkHtml = `<a href="${blobUrl}" download="${file.fileName}" class="file-download-link" style="color: #4a64e0; text-decoration: none;">Yuklab olish</a>`;
-              }
-          }
-
-          const card = document.createElement('div');
-          card.className = 'file-card'; // Reuse file-card style
-          card.innerHTML = `
-              <h3>${file.fileName}</h3>
-              <p class="uploader-info">Qo'shuvchi: ${file.uploaderName} | Yuklangan sana: ${file.uploadDate}</p>
-              ${file.comment ? `<p class="comment-text">Izoh: ${file.comment}</p>` : ''}
-              <p>Holati: <span class="status-dot ${file.status}"></span> ${file.status === 'green' ? 'Tasdiqlangan' : 'Tekshirilmoqda'}</p>
-              ${downloadLinkHtml}
-          `;
-          allFilesList.appendChild(card);
-      });
-
-      // Right Panel: Simplified Files List
+      // List files in the main educational list
       uploadedFiles.forEach(file => {
           const card = document.createElement('div');
-          card.className = 'methods-simplified-card';
+          card.className = 'methods-simplified-card'; // Use simplified card style for main list
           card.dataset.id = file.id; // Store ID for click listener
           card.innerHTML = `
-              <span>${file.uploaderName}</span>
+              <span>${file.uploaderName} - ${file.fileName}</span>
               <span>Holati: <span class="status-dot ${file.status}"></span></span>
           `;
-          simplifiedFilesList.appendChild(card);
+          educationalFilesList.appendChild(card);
       });
 
       // Add click listeners to simplified cards
-      document.querySelectorAll('.methods-simplified-card').forEach(card => {
+      document.querySelectorAll('#educationalFilesList .methods-simplified-card').forEach(card => {
           card.addEventListener('click', (e) => {
               const fileId = parseInt(e.currentTarget.dataset.id);
-              displaySelectedFileDetail(fileId);
+              displaySelectedEducationalFileDetail(fileId);
           });
       });
   }
 
-  // Displays full details of a selected file on the right panel's detail area (in educational view)
-  function displaySelectedFileDetail(id) {
+  // Displays full details of a selected file in the educational detail area
+  function displaySelectedEducationalFileDetail(id) {
       const file = uploadedFiles.find(f => f.id === id);
       if (file) {
           let blobUrl = '#';
@@ -446,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
               }
           }
 
-          selectedFileDetail.innerHTML = `
+          educationalFileDetailArea.innerHTML = `
               <h3>${file.fileName}</h3>
               <p class="uploader-info">Qo'shuvchi: ${file.uploaderName}</p>
               <p>Yuklangan sana: ${file.uploadDate}</p>
@@ -455,9 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
               ${downloadLinkHtml}
           `;
       } else {
-          selectedFileDetail.innerHTML = '<h3>Ma\'lumot topilmadi</h3><p>Yuqoridagi ro\'yxatdan fayl tanlang.</p>';
+          educationalFileDetailArea.innerHTML = '<h3>Ma\'lumot topilmadi</h3><p>Yuqoridagi ro\'yxatdan fayl tanlang.</p>';
       }
   }
+
 
   // --- Initial Load ---
   // Show the default tab ('methods') when the page loads
