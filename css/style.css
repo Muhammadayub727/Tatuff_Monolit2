@@ -82,11 +82,10 @@ html, body {
 .header_content {
     background-color: #232935;
     padding: 0.5rem 2rem;
-    text-align: center;
     height: 30px;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the tabs */
+    justify-content: flex-start; /* Chap tomonga tekislash */
 }
 
 .header_tabs {
@@ -102,34 +101,48 @@ html, body {
 }
 
 .header_tabs li {
-    padding: 10px;
+    padding: 10px 0; /* Paddingni gorizontalga olib tashladik */
     color: white;
-    background-color: transparent;
-    border-radius: 8px;
+    background-color: transparent; /* Fonni olib tashladik */
+    border-radius: 0; /* Border radiusni olib tashladik */
     cursor: pointer;
-    transition: background-color 0.3s;
-    display: flex; /* For back arrow and text */
+    transition: color 0.3s, font-weight 0.3s; /* Faqat rang va font-weightga transition */
+    display: flex;
     align-items: center;
     gap: 5px;
 }
 
 .header_tabs li:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: transparent; /* Hoverda ham fon bo'lmasligi uchun */
+    color: #cdd9ff; /* Hoverda rang o'zgarishi */
 }
 
 .header_tabs li.active {
-    background-color: #4a64e0; /* Active tab styling for main tabs */
+    background-color: transparent; /* Active tabda ham fon bo'lmasligi uchun */
+    font-weight: bold; /* Active tabda matn bold bo'ladi */
+    color: #4a64e0; /* Active tabda rang o'zgarishi */
 }
 
+/* O'quv ishlari bo'yicha back button uchun maxsus tab */
 .header_tabs li.active-special {
-    background-color: #4a64e0; /* Active tab styling for special view */
+    background-color: transparent; /* Fonni olib tashladik */
+    font-weight: bold; /* Active tabda matn bold bo'ladi */
+    color: #4a64e0; /* Active tabda rang o'zgarishi */
 }
+
 
 .header_tabs .back-arrow {
     font-size: 20px;
     cursor: pointer;
     margin-right: 5px;
+    color: white; /* O'q rangi oq bo'lsin */
+    transition: color 0.3s;
 }
+
+.header_tabs .back-arrow:hover {
+    color: #cdd9ff; /* Hoverda o'q rangi o'zgarishi */
+}
+
 
 /* ===== MAIN CONTENT ===== */
 .content {
@@ -142,22 +155,18 @@ html, body {
 
 .tab-content {
     display: none; /* Hidden by default */
-    flex: 1; /* Take full width by default, or be a flex container for sub-layouts */
+    flex: 1; /* Take full width of parent */
+    gap: 20px; /* Gap between left/right content within a tab */
+    flex-direction: row; /* ALL tab-contents will be row-based (left/right panels) */
 }
 
 .tab-content.active-tab {
     display: flex; /* Show active tab content */
-    flex-direction: column; /* Ensure content stacks vertically */
-    gap: 20px; /* Gap between sections within a tab */
 }
 
-/* Layout for "O'quv usullari" (main page) - Two Panels */
-#methodsContent {
-    flex-direction: row; /* Keep left/right side-by-side */
-}
-
-#methodsContent .content_left,
-#methodsContent .content_right {
+/* Layout for all main panels (content_left / content_right) */
+.content_left,
+.content_right {
     padding: 1.5rem;
     background-color: #2b3243;
     border-radius: 12px;
@@ -166,14 +175,14 @@ html, body {
     min-height: 400px;
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Inner content stacks vertically */
 }
 
-#methodsContent .content_left {
+.content_left {
     flex: 0.35;
 }
 
-#methodsContent .content_right {
+.content_right {
     flex: 0.65;
     padding: 20px;
     box-sizing: border-box;
@@ -181,32 +190,16 @@ html, body {
     max-height: calc(100vh - 200px); /* Adjust max height for scroll */
 }
 
-/* Layout for "O‘quv ishlari bo‘yicha" (Learning Activities) - Now a single main panel */
-#educationalContent {
-    flex-direction: column; /* Stack vertically for a single column flow */
-    align-items: center; /* Center the content if it's narrower */
+/* YANGI: "O‘quv ishlari bo‘yicha" tabidagi panellar uchun maxsus stil */
+#educationalContent .content_left {
+    background-color: #262c3a; /* Aslidan sal to'qroq */
+    border-right: 1px solid rgba(255, 255, 255, 0.1); /* Yumshoq chegara */
 }
 
-/* Specific styles for the list and detail area within educationalContent */
-#educationalFilesList {
-    width: 100%; /* Make it take full width of its parent */
-    max-width: 800px; /* Optional: limit width for better readability */
-    background-color: #2b3243;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
-    overflow-y: auto;
-    max-height: calc(100vh - 350px); /* Adjust based on header/footer/detail area */
-}
-
-#educationalFileDetailArea {
-    width: 100%;
-    max-width: 800px; /* Match list width */
-    margin-top: 20px;
-    background-color: #232935;
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid #4a64e0;
+#educationalContent .content_right {
+    background-color: #30374a; /* Aslidan sal ochroq */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); /* Kuchliroq soya */
+    border-left: 1px solid #4a64e0; /* Yorqinroq chegara */
 }
 
 
@@ -350,8 +343,62 @@ html, body {
     color: red;
 }
 
-/* Styles for simplified cards in "O‘quv ishlari bo‘yicha" view (now used inside educationalContent) */
-.methods-simplified-card {
+/* YANGI: In-place edit elementlari uchun stil */
+.comment-edit-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comment-edit-input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #4a64e0;
+    background-color: #232935;
+    color: white;
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.comment-edit-actions {
+    display: flex;
+    justify-content: flex-end; /* Tugmalarni o'ng tomonga tekislash */
+    gap: 10px;
+}
+
+.comment-edit-save-btn,
+.comment-edit-cancel-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.comment-edit-save-btn {
+    background-color: #4a64e0;
+    color: white;
+}
+
+.comment-edit-save-btn:hover {
+    background-color: #3a50b5;
+}
+
+.comment-edit-cancel-btn {
+    background-color: #e74c3c; /* Red */
+    color: white;
+}
+
+.comment-edit-cancel-btn:hover {
+    background-color: #c0392b;
+}
+
+
+/* Styles for simplified cards used in educationalFilesList */
+.simplified-file-item {
     background-color: #394056;
     padding: 10px;
     border-radius: 8px;
@@ -360,40 +407,40 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px; /* Add margin between simplified cards */
+    margin-bottom: 10px; /* Itemlar orasidagi 10px margin */
 }
 
-.methods-simplified-card:last-child {
-    margin-bottom: 0; /* No margin for the last card */
+.simplified-file-item:last-child {
+    margin-bottom: 0;
 }
 
-.methods-simplified-card:hover {
+.simplified-file-item:hover {
     background-color: #4a64e0;
 }
 
-.methods-simplified-card .status-dot {
+.simplified-file-item .status-dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
     display: inline-block;
     margin-left: 8px;
 }
-.methods-simplified-card .status-dot.green { background-color: green; }
-.methods-simplified-card .status-dot.red { background-color: red; }
+.simplified-file-item .status-dot.green { background-color: green; }
+.simplified-file-item .status-dot.red { background-color: red; }
 
-/* The methods-detail-area will now be within educationalContent */
-.methods-detail-area {
-    margin-top: 20px;
+/* Styles for the detail area within educationalContent's content_right */
+.detail-area-inner {
     padding: 15px;
     background-color: #232935;
     border-radius: 8px;
     border: 1px solid #4a64e0;
     flex-grow: 1; /* Take up remaining space */
-    display: flex; /* For internal content alignment */
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin-top: 20px; /* Space from the H2 above it */
 }
-.methods-detail-area h3 {
+.detail-area-inner h3 {
     margin-bottom: 10px;
 }
 
@@ -473,20 +520,19 @@ html, body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .content {
+    .content,
+    .tab-content { /* All tab contents will stack vertically */
         flex-direction: column;
         padding: 10px;
     }
 
-    #methodsContent .content_left,
-    #methodsContent .content_right,
-    #educationalFilesList, /* Apply to educational list */
-    #educationalFileDetailArea { /* Apply to educational detail area */
+    .content_left,
+    .content_right {
         width: 100%;
         min-height: 250px;
-        max-height: unset;
+        max-height: unset; /* Remove max-height on small screens */
     }
-
+    
     .header_tabs {
         flex-wrap: wrap;
         justify-content: center;
