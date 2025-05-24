@@ -1,244 +1,157 @@
-// script.js
-const addCardButton = document.getElementById('addCardButton');
-const modalOverlay = document.getElementById('modalOverlay');
-const teacherForm = document.getElementById('teacherForm');
-const teacherList = document.getElementById('teacherList');
-const teacherDetail = document.getElementById('teacherDetail');
-const submitBtn = document.getElementById('submitBtn');
+document.addEventListener('DOMContentLoaded', () => {
+  const fileUploadContainer = document.getElementById('fileUploadContainer');
+  const fileDetailsContainer = document.getElementById('fileDetailsContainer');
+  const headerTabs = document.querySelectorAll('.header_tabs li');
 
-let teachers = [];
-let selectedTeacherIndex = null;
-let editingIndex = null;
+  const MAX_FILES = 3;
+  let uploadedFiles = loadFilesFromLocalStorage();
+  let currentUploadFormsCount = 0;
 
-const inputs = {
-  firstName: document.getElementById('firstName'),
-  surname: document.getElementById('surname'),
-  phoneNumber: document.getElementById('phoneNumber'),
-  photoUpload: document.getElementById('photoUpload')
-};
-
-inputs.phoneNumber.value = "+998";
-
-inputs.phoneNumber.addEventListener('input', (e) => {
-  let cleaned = e.target.value.replace(/\D/g, '');
-  if (!cleaned.startsWith("998")) {
-    cleaned = "998" + cleaned;
-  }
-  cleaned = cleaned.slice(0, 12);
-  e.target.value = '+' + cleaned;
-  e.target.style.borderColor = cleaned.length === 12 ? '#4a64e0' : 'red';
-});
-
-inputs.phoneNumber.addEventListener('keydown', (e) => {
-  if (inputs.phoneNumber.selectionStart < 4 &&
-      (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'ArrowLeft')) {
-    e.preventDefault();
-  }
-});
-
-function validateInput(input) {
-  if (!input.value.trim()) {
-    input.style.borderColor = 'red';
-    return false;
-  } else {
-    input.style.borderColor = '#4a64e0';
-    return true;
-  }
-}
-
-function validatePhoneNumber(input) {
-  const val = input.value.replace(/\D/g, '');
-  if (val.length === 12) {
-    input.style.borderColor = '#4a64e0';
-    return true;
-  } else {
-    input.style.borderColor = 'red';
-    return false;
-  }
-}
-
-function validateFileInput(input) {
-  if (!input.files || input.files.length === 0) {
-    input.style.borderColor = 'red';
-    return false;
-  } else {
-    input.style.borderColor = '#4a64e0';
-    return true;
-  }
-}
-
-function clearValidation() {
-  Object.values(inputs).forEach(input => input.style.borderColor = '#ccc');
-}
-
-Object.values(inputs).forEach(input => {
-  input.addEventListener('input', () => {
-    if (input === inputs.phoneNumber) validatePhoneNumber(input);
-    else if (input.type === 'file') validateFileInput(input);
-    else validateInput(input);
-  });
-});
-
-function openModal(editIndex = null) {
-  modalOverlay.style.display = 'flex';
-  editingIndex = editIndex;
-
-  if (editIndex !== null) {
-    const teacher = teachers[editIndex];
-    inputs.firstName.value = teacher.firstName;
-    inputs.surname.value = teacher.surname;
-    inputs.phoneNumber.value = teacher.phoneNumber;
-  } else {
-    teacherForm.reset();
-    inputs.phoneNumber.value = '+998';
-  }
-}
-
-function closeModal() {
-  modalOverlay.style.display = 'none';
-  teacherForm.reset();
-  clearValidation();
-  editingIndex = null;
-  inputs.phoneNumber.value = '+998';
-}
-
-addCardButton.addEventListener('click', () => openModal());
-
-modalOverlay.addEventListener('click', (e) => {
-  if (e.target === modalOverlay) closeModal();
-});
-
-teacherForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  let valid = validateInput(inputs.firstName) &&
-              validateInput(inputs.surname) &&
-              validatePhoneNumber(inputs.phoneNumber) &&
-              (editingIndex !== null || validateFileInput(inputs.photoUpload));
-
-  if (!valid) return;
-
-  let photoURL;
-  if (editingIndex === null) {
-    const photoFile = inputs.photoUpload.files[0];
-    photoURL = URL.createObjectURL(photoFile);
-  } else {
-    photoURL = teachers[editingIndex].photoURL;
-  }
-
-  const newTeacher = {
-    firstName: inputs.firstName.value.trim(),
-    surname: inputs.surname.value.trim(),
-    phoneNumber: inputs.phoneNumber.value.trim(),
-    photoURL
-  };
-
-  if (editingIndex !== null) {
-    teachers[editingIndex] = newTeacher;
-  } else {
-    teachers.push(newTeacher);
-  }
-
-  saveTeachersToLocalStorage();
-  renderTeacherList();
-  closeModal();
-});
-
-function saveTeachersToLocalStorage() {
-  localStorage.setItem('teachers', JSON.stringify(teachers));
-}
-
-function loadTeachersFromLocalStorage() {
-  const data = localStorage.getItem('teachers');
-  if (data) {
-    teachers = JSON.parse(data);
-    renderTeacherList();
-  }
-}
-
-function renderTeacherList() {
-  teacherList.innerHTML = '';
-  teachers.forEach((teacher, index) => {
-    const card = document.createElement('div');
-    card.className = 'teacher-card';
-    card.innerHTML = `
-      <div class="status-dot"></div>
-      <strong>${teacher.firstName}</strong>
-      <div class="action-buttons">
-      <span onclick=editTeacher(${index}) class="material-symbols-outlined" style=" color: #FFA500; position: fixed;margin-left: 20px;">edit</span>
-      <span onclick=deleteTeacher(${index}) class="material-symbols-outlined" style="color: red;position: fixed; margin-left: 30px;">delete</span>
-      
-      </div>
-    `;
-
-    const statusDot = card.querySelector('.status-dot');
-    statusDot.addEventListener('click', () => {
-      statusDot.classList.toggle('active');
-    });
-
-    card.addEventListener('click', (e) => {
-      if (!e.target.closest('button')) {
-        selectedTeacherIndex = index;
-        renderTeacherDetail();
+  // Helper function to render a single file upload form
+  function renderUploadForm() {
+      if (currentUploadFormsCount >= MAX_FILES) {
+          alert("Siz maksimal fayl yuklash soniga yetdingiz (3 ta).");
+          return;
       }
-    });
 
-    teacherList.appendChild(card);
-  });
-}
+      const formId = `uploadForm-${currentUploadFormsCount}`;
+      const formHtml = `
+          <form id="${formId}" class="file-upload-form">
+              <div class="form-group">
+                  <label for="uploaderName-${currentUploadFormsCount}">Fayl qo'shuvchi (Ism, Familiya):</label>
+                  <input type="text" id="uploaderName-${currentUploadFormsCount}" placeholder="Ismingiz va Familiyangiz" required />
+              </div>
+              <div class="form-group">
+                  <label for="fileInput-${currentUploadFormsCount}">Fayl tanlang:</label>
+                  <input type="file" id="fileInput-${currentUploadFormsCount}" accept=".doc,.docx,.ppt,.pptx,.xls,.xlsx,.pdf,.txt,.exe" required />
+              </div>
+              <div class="form-group">
+                  <label for="comment-${currentUploadFormsCount}">Izoh:</label>
+                  <textarea id="comment-${currentUploadFormsCount}" placeholder="Fayl haqida izoh yozing"></textarea>
+              </div>
+              <button type="submit" class="file-upload-button">Yuklash</button>
+          </form>
+      `;
+      fileUploadContainer.insertAdjacentHTML('beforeend', formHtml);
 
-function renderTeacherDetail() {
-  if (selectedTeacherIndex === null) {
-    document.querySelector('.right_top').innerHTML = "<p>O'qituvchi tanlang</p>";
-    document.querySelector('.right_bottom').innerHTML = "";
-    return;
+      const form = document.getElementById(formId);
+      form.addEventListener('submit', handleFileUpload);
+      currentUploadFormsCount++;
   }
 
-  const teacher = teachers[selectedTeacherIndex];
+  // Handle file upload submission
+  function handleFileUpload(event) {
+      event.preventDefault();
 
-  document.querySelector('.right_top').innerHTML = `
-    <div class="teacher-meta">
-      <img src="${teacher.photoURL}" alt="Teacher photo" style="width:100px;height:100px;border-radius:50%;">
-      <div class="teacher-text">
-        <p><strong>Ism:</strong> ${teacher.firstName} ${teacher.surname}</p>
-        <p><strong>Telefon:</strong> ${teacher.phoneNumber}</p>
-      </div>
-    </div>
-  `;
+      const form = event.target;
+      const uploaderNameInput = form.querySelector('input[type="text"]');
+      const fileInput = form.querySelector('input[type="file"]');
+      const commentInput = form.querySelector('textarea');
 
-  document.querySelector('.right_bottom').innerHTML = `
-    <p>Qo‘shimcha ma’lumotlar joyi (agar kerak bo‘lsa)</p>
-  `;
-}
+      const uploaderName = uploaderNameInput.value.trim();
+      const comment = commentInput.value.trim();
+      const file = fileInput.files[0];
 
-  const teacher = teachers[selectedTeacherIndex];
-  teacherDetail.innerHTML = `
-    <div class="teacher-info">
-      <div class="teacher-meta">
-        <img src="${teacher.photoURL}" alt="Teacher photo" style="width:200px;height:250px;">
-        <div class="teacher-text">
-          <p><strong>Ism:</strong> ${teacher.firstName} ${teacher.surname}</p>
-          <p><strong>Telefon:</strong> ${teacher.phoneNumber}</p>
-        </div>
-      </div>
-    </div>
-  `;
+      if (!uploaderName || !file) {
+          alert("Iltimos, fayl qo'shuvchi ismini va faylni tanlang.");
+          return;
+      }
 
+      // Basic file type validation (client-side)
+      const allowedExtensions = ['.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.txt', '.exe'];
+      const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
+          alert("Faqat .doc, .docx, .ppt, .pptx, .xls, .xlsx, .pdf, .txt, .exe fayllarini yuklashingiz mumkin.");
+          return;
+      }
 
-function editTeacher(index) {
-  openModal(index);
-}
+      // Simulate file content check for status (replace with actual logic if needed)
+      // For demonstration, let's say a file is "green" if its name contains "safe"
+      const isFileGreen = file.name.toLowerCase().includes('safe');
 
-function deleteTeacher(index) {
-  teachers.splice(index, 1);
-  saveTeachersToLocalStorage();
-  renderTeacherList();
-  teacherDetail.innerHTML = '<p>O\'qituvchi tanlang</p>';
-}
+      const newFile = {
+          id: Date.now(), // Unique ID
+          uploaderName: uploaderName,
+          fileName: file.name,
+          fileSize: file.size,
+          uploadDate: new Date().toLocaleString(),
+          comment: comment,
+          status: isFileGreen ? 'green' : 'red', // Initial status
+          filePath: URL.createObjectURL(file) // For demonstration, in a real app, this would be a server path
+      };
 
-window.addEventListener('load', () => {
-  loadTeachersFromLocalStorage();
-  teacherDetail.innerHTML = "<p>O'qituvchi tanlang</p>";
+      uploadedFiles.push(newFile);
+      saveFilesToLocalStorage();
+      renderFileCards();
+
+      // Clear the form and render a new one if not at max
+      form.reset();
+      form.removeEventListener('submit', handleFileUpload); // Remove listener from old form
+      form.style.display = 'none'; // Hide the submitted form
+      renderUploadForm();
+  }
+
+  // Save files to LocalStorage
+  function saveFilesToLocalStorage() {
+      localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+  }
+
+  // Load files from LocalStorage
+  function loadFilesFromLocalStorage() {
+      const data = localStorage.getItem('uploadedFiles');
+      return data ? JSON.parse(data) : [];
+  }
+
+  // Render file cards in the right panel
+  function renderFileCards() {
+      fileDetailsContainer.innerHTML = '<h2>Yuklangan fayllar</h2>'; // Clear previous content
+      if (uploadedFiles.length === 0) {
+          fileDetailsContainer.innerHTML += '<p>Hali yuklangan fayllar yo\'q.</p>';
+          return;
+      }
+
+      uploadedFiles.forEach(file => {
+          const card = document.createElement('div');
+          card.className = 'file-card';
+          card.innerHTML = `
+              <h3>${file.fileName}</h3>
+              <p class="uploader-info">Qo'shuvchi: ${file.uploaderName} | Yuklangan sana: ${file.uploadDate}</p>
+              ${file.comment ? `<p class="comment-text">Izoh: ${file.comment}</p>` : ''}
+              <p>Holati: <span class="status-dot ${file.status}"></span> ${file.status === 'green' ? 'Tasdiqlangan' : 'Tekshirilmoqda'}</p>
+              <a href="${file.filePath}" download="${file.fileName}" class="file-download-link" style="color: #4a64e0; text-decoration: none;">Yuklab olish</a>
+          `;
+          fileDetailsContainer.appendChild(card);
+      });
+  }
+
+  // Tab switching logic (only educational tab will show files for now)
+  headerTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+          headerTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          const tabType = tab.dataset.tab;
+          if (tabType === 'educational') {
+              document.querySelector('.content_left').style.display = 'flex';
+              document.querySelector('.content_right').style.display = 'flex';
+              // Re-render file upload form if it's not present (e.g., if max files reached)
+              if (fileUploadContainer.children.length === 0 || currentUploadFormsCount < MAX_FILES) {
+                   // Check if last form is submitted, then add new one
+                  const lastForm = fileUploadContainer.lastElementChild;
+                  if (!lastForm || lastForm.style.display === 'none') {
+                      renderUploadForm();
+                  }
+              }
+              renderFileCards();
+          } else {
+              document.querySelector('.content_left').style.display = 'none';
+              document.querySelector('.content_right').style.display = 'none';
+              // You would typically load content for other tabs here
+          }
+      });
+  });
+
+  // Initial load
+  renderUploadForm(); // Render the first upload form
+  renderFileCards(); // Display any existing uploaded files
 });
-
-

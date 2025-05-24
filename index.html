@@ -1,75 +1,52 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tatuff_Monolit2</title>
-  <link rel="stylesheet" href="./css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tatuff_Monolit2</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <div class="header_section">
-        <img src="./images/tatuff.png" alt="Logo" class="logo" />
-        <p class="title">TATUFF</p>
-        <p class="sign-in">Boburjon</p>
-        <div class="radio_buttons">
-          <img src="./images/user.png" alt="user" class="user" />
-        </div>
-      </div>
-    </header>
-
-    <!-- Header content -->
-    <div class="header_content">
-      <ul class="header_tabs">
-        <li class="active">O‘quv ishlari bo‘yicha</li>
-        <li>Ilmiy tadqiqot</li>
-        <li>Ilmiy-ma’naviy ishlar</li>
-        <li>O'quv usullari</li>
-      </ul>
-    </div>
-    
-    
-
-    <!-- Main content -->
-    <main class="content">
-      <div class="content_left">
-        <div class="plus-icon" id="addCardButton">
-          <span class="plus-sign">+</span>
-        </div>
-
-        <div class="modal-overlay" id="modalOverlay">
-            <div class="modal" id="teacherModal">
-              <h2 style="color: white;">O'qituvchi qo'shish</h2>
-              <form id="teacherForm">
-                <input type="text" id="firstName" placeholder="First Name" required  class="form_input"/>
-                <input type="text" id="surname" placeholder="SurName" required  class="form_input"/>
-                <input type="tel" id="phoneNumber" placeholder="+998 __ ___ __ __" required class="form_input" />
-                <input type="file" id="photoUpload" accept="image/*" required  class="form_input"/>
-                <button type="submit" style="background-color: #4a64e0; color: white; margin-left: 200px;">Qo'shish</button>
-              </form>
+    <div class="container">
+        <header class="header">
+            <div class="header_section">
+                <img src="./images/tatuff.png" alt="Logo" class="logo" />
+                <p class="title">TATUFF</p>
+                <p class="sign-in">Boburjon</p>
+                <div class="radio_buttons">
+                    <img src="./images/user.png" alt="user" class="user" />
+                </div>
             </div>
-          </div>
+        </header>
 
-        <div class="teacher-list" id="teacherList">
-          
+        <div class="header_content">
+            <ul class="header_tabs">
+                <li class="active" data-tab="educational">O‘quv ishlari bo‘yicha</li>
+                <li data-tab="research">Ilmiy tadqiqot</li>
+                <li data-tab="spiritual">Ilmiy-ma’naviy ishlar</li>
+                <li data-tab="methods">O'quv usullari</li>
+            </ul>
         </div>
-      </div>
+        
+        <main class="content">
+            <div class="content_left">
+                <h2>Fayl yuklash</h2>
+                <div id="fileUploadContainer">
+                    </div>
+            </div>
 
-      <div class="content_right" id="teacherDetail">
-        <div class="right_top">   </div>
-        <div class="right_bottom"></div>
-      </div>
-    </main>
-    
-    <footer class="footer">
-        <p>&copy; 2025 Tatuff. Barcha huquqlar himoyalangan.</p>
-      </footer>
-  </div>
+            <div class="content_right" id="fileDetailsContainer">
+                <h2>Yuklangan fayllar</h2>
+                </div>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 2025 Tatuff. Barcha huquqlar himoyalangan.</p>
+        </footer>
+    </div>
 
-  <script src="./js/script.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 </html>

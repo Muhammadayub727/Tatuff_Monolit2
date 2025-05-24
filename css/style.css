@@ -1,369 +1,270 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html, body {
-  height: 100%;
-  font-family: 'Inter', sans-serif;
-  background-color: #171C28;
-  color: white;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background-color: #171C28;
+    color: white;
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* ===== HEADER ===== */
 .header {
-  background-color: #4a64e0;
-  padding: 1rem 2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    background-color: #4a64e0;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .header_section {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .logo {
-  width: 3rem;
-  height: 3rem;
-  margin-left: 2rem;
+    width: 3rem;
+    height: 3rem;
+    margin-left: 2rem;
 }
 
 .title {
-  font-weight: bold;
-  margin-left: 1rem;
-  font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 1rem;
+    font-size: 1.5rem;
 }
 
 .sign-in {
-  font-weight: bold;
-  margin-left: auto;
-  margin-right: 1rem;
-  cursor: pointer;
-  transition: color 0.3s ease;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: 1rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 .sign-in:hover {
-  color: #cdd9ff;
+    color: #cdd9ff;
 }
 
 .radio_buttons {
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: #cdc9c9;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 2rem;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #cdc9c9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 2rem;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 .radio_buttons:hover {
-  background-color: white;
+    background-color: white;
 }
 
 .user {
-  width: 2rem;
-  height: 2rem;
+    width: 2rem;
+    height: 2rem;
 }
 
 /* ===== HEADER CONTENT ===== */
 .header_content {
-  background-color: #232935;
-  padding: 0.5rem 2rem;
-  text-align: center;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  /* justify-content: center; */
+    background-color: #232935;
+    padding: 0.5rem 2rem;
+    text-align: center;
+    height: 30px;
+    display: flex;
+    align-items: center;
 }
-/* 
-.header_content {
-  background-color: #232935;
-  padding: 20px;
-  text-align: center;
-} */
 
 .header_tabs {
-  display: inline-flex; /* centerda turadi */
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    display: inline-flex;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .header_tabs li {
-  padding: 10px;
-  color: white;
-  background-color: transparent; /* o‘z backgroundi bo‘lmasin */
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    padding: 10px;
+    color: white;
+    background-color: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .header_tabs li:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* hoverda engil ko‘rinish */
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* .header_tabs li.active {
-  background-color: #4a64e0;
-} */
-
+.header_tabs li.active {
+    background-color: #4a64e0; /* Active tab styling */
+}
 
 /* ===== MAIN CONTENT ===== */
 .content {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  flex: 1;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    flex: 1;
 }
 
 .content_left,
 .content_right {
-  padding: 1.5rem;
-  background-color: #2b3243;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
-  flex: 1;
-  min-height: 400px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
+    padding: 1.5rem;
+    background-color: #2b3243;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+    flex: 1;
+    min-height: 400px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .content_left {
-  flex: 0.35;
-}
-
-/* .content_right {
-  flex: 0.65;
-} */
-
-/* + icon */
-.plus-icon {
-  position: fixed; /* fixed pozitsiya */
-  margin-left: 28%;
-  margin-top: 28%;
-  width: 50px;
-  height: 50px;
-  background-color: #232935;
-  border-radius: 50%;
-  color: white;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
-
-.plus-icon:hover {
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
-  transform: scale(1.1);
-}
-
-/* Teacher cards in left panel */
-.teacher-list {
-  margin-top: 70px; /* + icon dan pastroq boshlanishi uchun */
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-.teacher-card {
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #394056;
-  border-radius: 8px;
-  cursor: pointer;
-  text-transform: capitalize;
-  transition: background 0.3s ease;
-  user-select: none;
-  display: flex;
-}
-
-.teacher-card:hover {
-  background-color: #4a64e0;
-}
-
-/* ==== Modal styles ==== */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal {
-  background: #1d222f;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 400px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  color: #000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.modal h2 {
-  margin-bottom: 1rem;
-}
-
-.modal input[type="text"],
-.modal input[type="tel"],
-.modal input[type="file"] {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 2px solid red;
-  border-radius: 5px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.modal input:valid {
-  border-color: #4a64e0;
-}
-
-.modal button {
-  padding: 0.7rem;
-  font-weight: 700;
-  font-size: 1rem;
-  background-color: #4a64e0;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.modal button:hover {
-  background-color: #3a50b5;
-}
-
-/* Teacher detail on right panel */
-#teacherDetail .teacher-info {
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.teacher-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    
-}
-
-.teacher-meta img {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid #4a64e0;
-}
-
-.teacher-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-grow: 1;
-  gap: 8px;
-  padding-left: 15px;
-}
-
-.teacher-text p {
-  margin: 0;
-  font-size: 16px;
-  color: #f0f0f0;
-}
-
-.form_input {
-  padding: 10px;
-  margin-bottom: 10px;
-  /* border: 1px solid #ccc; */
-  font-size: 16px;
-  border-radius: 5px;
-  outline: none;
-  width: 300px;
+    flex: 0.35;
 }
 
 .content_right {
     flex: 0.65;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* File Upload Form Styles */
+.file-upload-form {
+  margin-top: 30px;
     display: flex;
     flex-direction: column;
-    /* height: 100%; */
-    padding: 20px; /* 4ta tomondan bir xilda */
-    box-sizing: border-box;
-  }
-  
-  .right_top {
-    flex: 0.6;
-    background-color: #232935;
+    gap: 15px;
     margin-bottom: 20px;
-    border-radius: 10px;
-    padding: 20px;
-    box-sizing: border-box;
+    padding: 15px;
+    border: 1px solid #4a64e0;
+    border-radius: 8px;
+    height: 400px;
+}
+
+.form-group {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    
-  }
-  
-  .right_bottom {
-    flex: 0.4;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #f0f0f0;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group textarea,
+.file-upload-button {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #394056;
     background-color: #232935;
-    border-radius: 10px;
-    padding: 20px;
-    box-sizing: border-box;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group input[type="file"]:focus {
+    border-color: #4a64e0;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.file-upload-button {
+    background-color: #4a64e0;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.file-upload-button:hover {
+    background-color: #3a50b5;
+}
+
+/* File Card Styles */
+.file-card {
+    background-color: #394056;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
 
-  
+.file-card h3 {
+    margin-top: 0;
+    color: #f0f0f0;
+}
 
+.file-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #cdd9ff;
+}
+
+.file-card .uploader-info {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.file-card .comment-text {
+    background-color: #2b3243;
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 3px solid #4a64e0;
+}
+
+.file-card .status-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: red; /* Default to red */
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.file-card .status-dot.green {
+    background-color: green;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
-  .content {
-    flex-direction: column;
-    padding: 10px;
-  }
+    .content {
+        flex-direction: column;
+        padding: 10px;
+    }
 
-  .content_left,
-  .content_right {
-    width: 100%;
-    min-height: 300px;
-  }
-
-  .plus-icon {
-    right: 15px;
-    bottom: 15px;
-  }
-
+    .content_left,
+    .content_right {
+        width: 100%;
+        min-height: 300px;
+    }
 }
 
 .footer {
@@ -372,4 +273,4 @@ html, body {
     background-color: #1d222f;
     font-size: 0.9rem;
     color: #999;
-  }
+}
