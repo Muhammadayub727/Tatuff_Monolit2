@@ -78,7 +78,7 @@ html, body {
     height: 2rem;
 }
 
-/* ===== HEADER CONTENT ===== */
+/* ===== HEADER CONTENT (Tabs) ===== */
 .header_content {
     background-color: #232935;
     padding: 0.5rem 2rem;
@@ -86,6 +86,7 @@ html, body {
     height: 30px;
     display: flex;
     align-items: center;
+    justify-content: center; /* Center the tabs */
 }
 
 .header_tabs {
@@ -96,6 +97,10 @@ html, body {
     margin: 0;
 }
 
+.header_tabs.hidden {
+    display: none;
+}
+
 .header_tabs li {
     padding: 10px;
     color: white;
@@ -103,6 +108,9 @@ html, body {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
+    display: flex; /* For back arrow and text */
+    align-items: center;
+    gap: 5px;
 }
 
 .header_tabs li:hover {
@@ -110,7 +118,17 @@ html, body {
 }
 
 .header_tabs li.active {
-    background-color: #4a64e0; /* Active tab styling */
+    background-color: #4a64e0; /* Active tab styling for main tabs */
+}
+
+.header_tabs li.active-special {
+    background-color: #4a64e0; /* Active tab styling for special view */
+}
+
+.header_tabs .back-arrow {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 5px;
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -119,10 +137,26 @@ html, body {
     gap: 20px;
     padding: 20px;
     flex: 1;
+    min-height: calc(100vh - 150px); /* Adjust based on header/footer height */
 }
 
-.content_left,
-.content_right {
+.tab-content {
+    display: none; /* Hidden by default */
+    flex: 1; /* Take full width by default, or be a flex container for sub-layouts */
+}
+
+.tab-content.active-tab {
+    display: flex; /* Show active tab content */
+}
+
+/* Layout for "O'quv usullari" (main page) */
+#methodsContent {
+    display: flex; /* Ensure it's a flex container for left/right panels */
+    gap: 20px;
+}
+
+#methodsContent .content_left,
+#methodsContent .content_right {
     padding: 1.5rem;
     background-color: #2b3243;
     border-radius: 12px;
@@ -134,19 +168,51 @@ html, body {
     flex-direction: column;
 }
 
-.content_left {
+#methodsContent .content_left {
     flex: 0.35;
 }
 
-.content_right {
+#methodsContent .content_right {
     flex: 0.65;
     padding: 20px;
     box-sizing: border-box;
+    overflow-y: auto; /* Add scrollbar for overflow */
+    max-height: calc(100vh - 200px); /* Adjust max height for scroll */
+}
+
+/* Layout for "O‘quv ishlari bo‘yicha" (Learning Activities) */
+.tab-content.methods-layout {
+    display: flex; /* Ensure it's a flex container for left/right panels */
+    gap: 20px;
+    flex: 1;
+}
+
+.methods-left-panel,
+.methods-right-panel {
+    padding: 1.5rem;
+    background-color: #2b3243;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+    flex: 1;
+    min-height: 400px;
+    overflow-y: auto; /* Scroll for both panels */
+    max-height: calc(100vh - 200px); /* Adjust max height for scroll */
+}
+
+.methods-left-panel {
+    flex: 0.5;
+}
+
+.methods-right-panel {
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 /* File Upload Form Styles */
 .file-upload-form {
-  margin-top: 30px;
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -154,7 +220,8 @@ html, body {
     padding: 15px;
     border: 1px solid #4a64e0;
     border-radius: 8px;
-    height: 400px;
+    height: auto;
+    min-height: 300px;
 }
 
 .form-group {
@@ -203,9 +270,9 @@ html, body {
     background-color: #3a50b5;
 }
 
-/* File Card Styles */
+/* File Card Styles (used in both main and educational views) */
 .file-card {
-  margin-top: 10px;
+    margin-top: 10px;
     background-color: #394056;
     padding: 15px;
     margin-bottom: 15px;
@@ -214,6 +281,7 @@ html, body {
     flex-direction: column;
     gap: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: relative;
 }
 
 .file-card h3 {
@@ -244,7 +312,7 @@ html, body {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background-color: red; /* Default to red */
+    background-color: red;
     display: inline-block;
     margin-right: 8px;
     vertical-align: middle;
@@ -254,24 +322,184 @@ html, body {
     background-color: green;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .content {
-        flex-direction: column;
-        padding: 10px;
-    }
-
-    .content_left,
-    .content_right {
-        width: 100%;
-        min-height: 300px;
-    }
+.file-card .action-icons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
 }
 
+.file-card .action-icons .material-symbols-outlined {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.file-card .action-icons .material-symbols-outlined:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.file-card .action-icons .edit-icon {
+    color: orange;
+}
+
+.file-card .action-icons .delete-icon {
+    color: red;
+}
+
+/* Styles for simplified cards in "O‘quv ishlari bo‘yicha" view */
+.methods-simplified-card {
+    background-color: #394056;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.methods-simplified-card:hover {
+    background-color: #4a64e0;
+}
+
+.methods-simplified-card .status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 8px;
+}
+.methods-simplified-card .status-dot.green { background-color: green; }
+.methods-simplified-card .status-dot.red { background-color: red; }
+
+.methods-detail-area {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #232935;
+    border-radius: 8px;
+    border: 1px solid #4a64e0;
+    flex-grow: 1; /* Take up remaining space */
+    display: flex; /* For internal content alignment */
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.methods-detail-area h3 {
+    margin-bottom: 10px;
+}
+
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: #2b3243;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    color: white;
+}
+
+.modal h2 {
+    margin-bottom: 1rem;
+    color: #4a64e0;
+}
+
+.modal p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.modal-actions button {
+    padding: 0.8rem 1.5rem;
+    margin: 0 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.modal-actions .confirm-btn {
+    background-color: #e74c3c; /* Red */
+    color: white;
+}
+
+.modal-actions .confirm-btn:hover {
+    background-color: #c0392b;
+}
+
+.modal-actions .cancel-btn {
+    background-color: #3498db; /* Blue */
+    color: white;
+}
+
+.modal-actions .cancel-btn:hover {
+    background-color: #2980b9;
+}
+
+
+/* Footer */
 .footer {
     text-align: center;
     padding: 1rem;
     background-color: #1d222f;
     font-size: 0.9rem;
     color: #999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content,
+    .tab-content.methods-layout {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    #methodsContent .content_left,
+    #methodsContent .content_right,
+    .methods-left-panel,
+    .methods-right-panel {
+        width: 100%;
+        min-height: 250px; /* Adjusted for smaller screens */
+        max-height: unset; /* Remove max-height on small screens to allow full scroll */
+    }
+
+    .header_tabs {
+        flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .header_content {
+        height: auto; /* Adjust height for wrapped tabs */
+        padding: 0.5rem;
+    }
+
+    .header_tabs li {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .modal {
+        width: 90%;
+        padding: 1.5rem;
+    }
 }
