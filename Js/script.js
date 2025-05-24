@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileDetailsContainer = document.getElementById('fileDetailsContainer');
 
   // "O‘quv ishlari bo‘yicha" (Learning Activities) elements
-  const educationalFilesList = document.getElementById('educationalFilesList'); // Renamed from allFilesList
-  const educationalFileDetailArea = document.getElementById('educationalFileDetailArea'); // Renamed from selectedFileDetail
+  const educationalFilesList = document.getElementById('educationalFilesList'); 
+  const educationalFileDetailArea = document.getElementById('educationalFileDetailArea');
 
   // Modal elements
   const deleteModalOverlay = document.getElementById('deleteModalOverlay');
@@ -20,12 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
   // Data and state variables
-  let uploadedFiles = loadFilesFromLocalStorage();
-  let fileToDeleteId = null; // To store the ID of the file to be deleted
-  let fileToEditId = null;   // To store the ID of the file being edited
+  let uploadedFiles = loadFilesFromLocalStorage(); 
+  let fileToDeleteId = null; 
+  let fileToEditId = null; // Faylni tahrirlash uchun ID
 
   // Allowed file extensions (non-image)
   const ALLOWED_EXTENSIONS = ['.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.txt', '.exe'];
+  // Maksimal fayl hajmi (megabaytda)
+  const MAX_FILE_SIZE_MB = 500; 
+  const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024; // MB dan baytga o'tkazish
 
   // --- Local Storage Management ---
 
@@ -41,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- File Upload Form Logic (for 'O'quv usullari' tab) ---
 
   function renderFileUploadForm() {
-      // Only one form is rendered. It acts as both add and edit.
+      // Bu forma faqat yangi fayl yuklash yoki mavjud faylni tahrirlash uchun ishlaydi
       const formHtml = `
           <form id="fileUploadForm" class="file-upload-form">
               <div class="form-group">
@@ -52,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   <label for="fileInput">Fayl tanlang:</label>
                   <input type="file" id="fileInput" accept="${ALLOWED_EXTENSIONS.join(',')}" ${fileToEditId === null ? 'required' : ''} />
                   <small style="color: #ccc; font-size: 0.8em; margin-top: 5px;">Rasm fayllari (jpg, png, gif) yuklashga ruxsat berilmagan.</small>
+                  <small style="color: #ccc; font-size: 0.8em; margin-top: 5px;">Maksimal fayl hajmi: ${MAX_FILE_SIZE_MB}MB.</small>
               </div>
               <div class="form-group">
                   <label for="comment">Izoh:</label>
@@ -60,26 +64,25 @@ document.addEventListener('DOMContentLoaded', () => {
               <button type="submit" class="file-upload-button" id="submitFileBtn">Yuklash</button>
           </form>
       `;
-      fileUploadContainer.innerHTML = formHtml; // Replace content
+      fileUploadContainer.innerHTML = formHtml;
 
       const form = document.getElementById('fileUploadForm');
       form.addEventListener('submit', handleFileUpload);
       
-      // If editing, populate the form
+      // Agar tahrirlash rejimi bo'lsa, formani to'ldirish
       if (fileToEditId !== null) {
           const file = uploadedFiles.find(f => f.id === fileToEditId);
           if (file) {
               document.getElementById('uploaderName').value = file.uploaderName;
               document.getElementById('comment').value = file.comment;
               document.getElementById('submitFileBtn').textContent = 'Yangilash';
-              // fileInput remains empty, user can choose to re-upload or keep old
           }
       } else {
           document.getElementById('submitFileBtn').textContent = 'Yuklash';
       }
   }
 
-  // Handles file upload or edit submission
+  // Handles file upload (only for new files now)
   async function handleFileUpload(event) {
       event.preventDefault();
 
@@ -91,13 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const comment = commentInput.value.trim();
       const file = fileInput.files[0];
 
-      // Basic validation
       if (!uploaderName) {
           alert("Iltimos, fayl qo'shuvchi ismini kiriting.");
           return;
       }
-
-      if (fileToEditId === null && !file) { // If adding, file is required
+      
+      if (fileToEditId === null && !file) { // Yangi fayl yuklashda fayl tanlash shart
           alert("Iltimos, faylni tanlang.");
           return;
       }
@@ -105,31 +107,56 @@ document.addEventListener('DOMContentLoaded', () => {
       let fileBase64 = null;
       let fileName = null;
       let fileSize = null;
+      let fileExtension = null;
 
-      if (file) { // If a new file is selected (either adding or replacing during edit)
-          const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+      if (file) { // Agar yangi fayl tanlansa (yangi fayl yuklashda yoki tahrirlashda almashtirilganda)
+          fileExtension = '.' + file.name.split('.').pop().toLowerCase();
           if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
               alert(`Faqat ${ALLOWED_EXTENSIONS.join(', ')} fayllarini yuklashingiz mumkin.`);
               return;
           }
 
-          // Read file as Base64 for local storage
+          // --- Fayl hajmini tekshirish ---
+          if (file.size > MAX_FILE_SIZE_BYTES) {
+              alert(`Fayl hajmi ${MAX_FILE_SIZE_MB}MB dan oshmasligi kerak. Sizning faylingiz hajmi: ${(file.size / (1024 * 1024)).toFixed(2)}MB`);
+              return;
+          }
+
           fileBase64 = await readFileAsBase64(file);
           fileName = file.name;
           fileSize = file.size;
-      } else if (fileToEditId !== null) {
-          // If editing and no new file is selected, retain existing file data
+      } else if (fileToEditId !== null) { // Tahrirlashda yangi fayl tanlanmagan bo'lsa, eski fayl ma'lumotlarini saqlash
           const existingFile = uploadedFiles.find(f => f.id === fileToEditId);
           if (existingFile) {
-              fileBase64 = existingFile.base64Data; // Keep old Base64
+              fileBase64 = existingFile.base64Data;
               fileName = existingFile.fileName;
               fileSize = existingFile.fileSize;
+              fileExtension = '.' + existingFile.fileName.split('.').pop().toLowerCase(); // Eski fayl kengaytmasini olish
           }
       }
 
 
-      // Simulate file content check for status (replace with actual logic if needed)
-      const isFileGreen = (fileName?.toLowerCase().includes('safe') || comment.toLowerCase().includes('safe'));
+      let fileStatus = 'red'; // Default status is 'red' (Tekshirilmoqda)
+
+      // --- Fayl tarkibini simulyatsiya qilish va statusni belgilash ---
+      const contentToCheck = (comment + " " + fileName).toLowerCase();
+      if (contentToCheck.includes('reklama') || contentToCheck.includes('promo')) {
+          fileStatus = 'red'; 
+      } else if (fileExtension === '.txt' && fileBase64) {
+          try {
+              const decodedText = atob(fileBase64.split(',')[1]); 
+              if (decodedText.toLowerCase().includes('reklama') || decodedText.toLowerCase().includes('promo') || decodedText.toLowerCase().includes('spam')) {
+                  fileStatus = 'red';
+              } else {
+                  fileStatus = Math.random() < 0.8 ? 'green' : 'red'; 
+              }
+          } catch (e) {
+              console.warn("Base64 dan matnni o'qishda xato, ehtimol matn fayli emas:", e);
+              fileStatus = Math.random() < 0.5 ? 'green' : 'red'; 
+          }
+      } else {
+          fileStatus = Math.random() < 0.6 ? 'green' : 'red'; 
+      }
 
       if (fileToEditId !== null) {
           // Edit existing file
@@ -140,9 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   id: existingFile.id, // Keep original ID
                   uploaderName: uploaderName,
                   comment: comment,
-                  status: isFileGreen ? 'green' : 'red',
+                  status: fileStatus, // Yangilangan status
                   uploadDate: existingFile.uploadDate, // Keep original upload date
-                  // Update file data only if a new file was provided or if it's retained
                   base64Data: fileBase64, 
                   fileName: fileName,
                   fileSize: fileSize,
@@ -152,25 +178,26 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
           // Add new file
           const newFile = {
-              id: Date.now(), // Unique ID
+              id: Date.now(), 
               uploaderName: uploaderName,
               fileName: fileName,
               fileSize: fileSize,
               uploadDate: new Date().toLocaleString(),
               comment: comment,
-              status: isFileGreen ? 'green' : 'red',
-              base64Data: fileBase64 // Store Base64 data
+              status: fileStatus, 
+              base64Data: fileBase64 
           };
           uploadedFiles.push(newFile);
       }
 
       saveFilesToLocalStorage();
-      renderFileCards(); // Update 'O'quv usullari' view
+      renderFileCards(); 
       renderFileUploadForm(); // Reset form
-      renderEducationalContent(); // Update 'O‘quv ishlari bo‘yicha' view (if visible)
+      if (document.getElementById('educationalContent').classList.contains('active-tab')) {
+          renderEducationalContent(); 
+      }
   }
 
-  // Converts a File object to a Base64 string
   function readFileAsBase64(file) {
       return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -183,21 +210,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- File Card Rendering (for 'O'quv usullari' tab) ---
 
   function renderFileCards() {
-      fileDetailsContainer.innerHTML = '<h2>Yuklangan fayllar</h2>'; // Clear previous content
+      fileDetailsContainer.innerHTML = '<h2>Yuklangan fayllar</h2>'; 
       if (uploadedFiles.length === 0) {
           fileDetailsContainer.innerHTML += '<p>Hali yuklangan fayllar yo\'q.</p>';
           return;
       }
 
       uploadedFiles.forEach(file => {
-          let blobUrl = '#'; // Default to a non-functional link
-          let downloadLinkHtml = '<span style="color: #999;">Yuklab olish mavjud emas</span>'; // Default text if download not available
+          let blobUrl = '#'; 
+          // Yuklab olish linki uchun default disabled holat
+          let downloadButtonHtml = `<a class="download-button disabled-button" style="background-color: #555; cursor: not-allowed;">Yuklab olish mavjud emas</a>`; 
 
           if (file.base64Data) {
               const fileBlob = base64toBlob(file.base64Data, getMimeType(file.fileName));
-              if (fileBlob) { // Ensure blob was successfully created
+              if (fileBlob) { 
                   blobUrl = URL.createObjectURL(fileBlob);
-                  downloadLinkHtml = `<a href="${blobUrl}" download="${file.fileName}" class="file-download-link" style="color: #4a64e0; text-decoration: none;">Yuklab olish</a>`;
+                  // YANGI: button elementidan foydalanish, download-button klassini beramiz
+                  downloadButtonHtml = `<a href="${blobUrl}" download="${file.fileName}" class="download-button">Yuklab olish</a>`;
               } else {
                   console.warn(`Could not create Blob for file ID ${file.id}. Download link will be disabled.`);
               }
@@ -207,12 +236,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const card = document.createElement('div');
           card.className = 'file-card';
+          card.dataset.id = file.id; 
+
           card.innerHTML = `
               <h3>${file.fileName}</h3>
               <p class="uploader-info">Qo'shuvchi: ${file.uploaderName} | Yuklangan sana: ${file.uploadDate}</p>
               ${file.comment ? `<p class="comment-text">Izoh: ${file.comment}</p>` : ''}
               <p>Holati: <span class="status-dot ${file.status}"></span> ${file.status === 'green' ? 'Tasdiqlangan' : 'Tekshirilmoqda'}</p>
-              ${downloadLinkHtml}
+              ${downloadButtonHtml}
               <div class="action-icons">
                   <span class="material-symbols-outlined edit-icon" data-id="${file.id}">edit</span>
                   <span class="material-symbols-outlined delete-icon" data-id="${file.id}">delete</span>
@@ -220,17 +251,15 @@ document.addEventListener('DOMContentLoaded', () => {
           `;
           fileDetailsContainer.appendChild(card);
           
-          // Store blob URL if created, for potential revocation later
           if (blobUrl !== '#') {
               card.dataset.blobUrl = blobUrl;
           }
       });
 
-      // Attach event listeners to new icons
       document.querySelectorAll('.edit-icon').forEach(icon => {
           icon.addEventListener('click', (e) => {
               fileToEditId = parseInt(e.target.dataset.id);
-              renderFileUploadForm(); // Populate form for editing
+              renderFileUploadForm(); // Formani tahrirlash uchun to'ldirish
           });
       });
 
@@ -242,12 +271,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // Helper to convert Base64 to Blob
+  // --- Helper functions (base64toBlob, getMimeType, etc. remain unchanged) ---
+
   function base64toBlob(base64, mimeType) {
-      // Robust check for valid base64 string
       if (!base64 || typeof base64 !== 'string' || !base64.includes(',')) {
-          console.error("Invalid base64 string provided for Blob creation:", base64 ? base64.substring(0, 50) + "..." : "null/undefined"); // Log partial string for debug
-          return null; // Return null if invalid
+          console.error("Invalid base64 string provided for Blob creation:", base64 ? base64.substring(0, 50) + "..." : "null/undefined"); 
+          return null; 
       }
       try {
           const byteCharacters = atob(base64.split(',')[1]);
@@ -259,11 +288,10 @@ document.addEventListener('DOMContentLoaded', () => {
           return new Blob([byteArray], { type: mimeType });
       } catch (e) {
           console.error("Error creating Blob from base64:", e, "Base64 string (first 50 chars):", base64 ? base64.substring(0, 50) + "..." : "null/undefined");
-          return null; // Return null on error
+          return null; 
       }
   }
 
-  // Helper to get MIME type from file extension
   function getMimeType(fileName) {
       if (!fileName) return 'application/octet-stream';
       const ext = fileName.split('.').pop().toLowerCase();
@@ -277,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
           case 'pdf': return 'application/pdf';
           case 'txt': return 'text/plain';
           case 'exe': return 'application/x-msdownload';
-          default: return 'application/octet-stream'; // Generic binary file
+          default: return 'application/octet-stream'; 
       }
   }
 
@@ -289,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function hideDeleteConfirmationModal() {
       deleteModalOverlay.style.display = 'none';
-      fileToDeleteId = null; // Clear selected ID
+      fileToDeleteId = null; 
   }
 
   confirmDeleteBtn.addEventListener('click', () => {
@@ -303,7 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
       hideDeleteConfirmationModal();
   });
 
-  // Close modal if clicking outside
   deleteModalOverlay.addEventListener('click', (e) => {
       if (e.target === deleteModalOverlay) {
           hideDeleteConfirmationModal();
@@ -312,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Delete Function ---
   function deleteFile(id) {
-      // Revoke the object URL if it was created for the file being deleted
       const cardToDelete = document.querySelector(`.file-card .delete-icon[data-id="${id}"]`)?.closest('.file-card');
       if (cardToDelete && cardToDelete.dataset.blobUrl) {
           URL.revokeObjectURL(cardToDelete.dataset.blobUrl);
@@ -320,37 +346,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
       uploadedFiles = uploadedFiles.filter(file => file.id !== id);
       saveFilesToLocalStorage();
-      renderFileCards(); // Update 'O'quv usullari' view
+      renderFileCards(); 
       if (document.getElementById('educationalContent').classList.contains('active-tab')) {
-           renderEducationalContent(); // Update 'O‘quv ishlari bo‘yicha' view only if active
+           renderEducationalContent(); 
       }
-      renderFileUploadForm(); // Reset/render form for next action
+      renderFileUploadForm(); 
   }
 
   // --- Tab Switching Logic ---
 
   function showTab(tabName) {
-      // Hide all content sections first
-      allTabContents.forEach(content => content.classList.remove('active-tab'));
+      allTabContents.forEach(content => {
+          content.classList.remove('active-tab');
+          content.style.display = 'none'; // Ensure it's hidden
+      });
 
-      // Hide both main and special tab containers
       mainTabsContainer.classList.add('hidden');
       educationalActivityTabsContainer.classList.add('hidden');
 
-      // Show the appropriate content and tab container
       if (tabName === 'educational') {
           document.getElementById('educationalContent').classList.add('active-tab');
+          document.getElementById('educationalContent').style.display = 'flex'; 
+
           educationalActivityTabsContainer.classList.remove('hidden');
-          renderEducationalContent(); // Render content for this special view
+          renderEducationalContent(); 
       } else {
-          // All other regular tabs
           document.getElementById(`${tabName}Content`).classList.add('active-tab');
+          document.getElementById(`${tabName}Content`).style.display = 'flex'; 
+
           mainTabsContainer.classList.remove('hidden');
-          // Set active class for the clicked tab
           mainTabs.forEach(t => t.classList.remove('active'));
           document.querySelector(`#mainTabs li[data-tab="${tabName}"]`).classList.add('active');
           
-          // If it's the "O'quv usullari" tab, also render its specific content
           if (tabName === 'methods') {
               renderFileUploadForm();
               renderFileCards();
@@ -358,81 +385,94 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   }
 
-  // Event listeners for main tabs
   mainTabs.forEach(tab => {
       tab.addEventListener('click', (e) => {
           showTab(e.currentTarget.dataset.tab);
       });
   });
 
-  // Event listener for back button in special "O‘quv ishlari bo‘yicha" view
   backToMethodsBtn.addEventListener('click', () => {
-      showTab('methods'); // Go back to "O'quv usullari"
+      showTab('methods'); 
   });
 
   // --- Content Rendering for "O‘quv ishlari bo‘yicha" (Learning Activities) ---
 
   function renderEducationalContent() {
-      // Render the detailed list of files on the left panel
-      educationalFilesList.innerHTML = ''; // Clear previous content
-      educationalFileDetailArea.innerHTML = '<h3>Tanlangan fayl ma\'lumotlari</h3><p>Fayl tanlang.</p>'; // Reset detail area
+      const currentEducationalFilesList = document.getElementById('educationalFilesList');
+      const currentEducationalFileDetailArea = document.getElementById('educationalFileDetailArea');
+
+      currentEducationalFilesList.innerHTML = ''; 
+      currentEducationalFileDetailArea.innerHTML = '<h3>Tanlangan fayl ma\'lumotlari</h3><p>Fayl tanlang.</p>'; // Reset detail area
 
       if (uploadedFiles.length === 0) {
-          educationalFilesList.innerHTML += '<p>Hali yuklangan fayllar yo\'q.</p>';
+          currentEducationalFilesList.innerHTML += '<p>Hali yuklangan fayllar yo\'q.</p>';
           return;
       }
 
-      // List files in the main educational list
       uploadedFiles.forEach(file => {
           const card = document.createElement('div');
-          card.className = 'methods-simplified-card'; // Use simplified card style for main list
-          card.dataset.id = file.id; // Store ID for click listener
+          card.className = 'simplified-file-item'; 
+          card.dataset.id = file.id; 
           card.innerHTML = `
               <span>${file.uploaderName} - ${file.fileName}</span>
               <span>Holati: <span class="status-dot ${file.status}"></span></span>
           `;
-          educationalFilesList.appendChild(card);
+          currentEducationalFilesList.appendChild(card);
       });
 
-      // Add click listeners to simplified cards
-      document.querySelectorAll('#educationalFilesList .methods-simplified-card').forEach(card => {
-          card.addEventListener('click', (e) => {
+      document.querySelectorAll('#educationalFilesList .simplified-file-item').forEach(item => {
+          item.addEventListener('click', (e) => {
               const fileId = parseInt(e.currentTarget.dataset.id);
               displaySelectedEducationalFileDetail(fileId);
           });
       });
   }
 
-  // Displays full details of a selected file in the educational detail area
+  // Displays full details of a selected file in the educational detail area (content_right)
   function displaySelectedEducationalFileDetail(id) {
       const file = uploadedFiles.find(f => f.id === id);
-      if (file) {
+      const currentDetailArea = document.getElementById('educationalFileDetailArea'); 
+
+      if (file && currentDetailArea) {
           let blobUrl = '#';
-          let downloadLinkHtml = '<span style="color: #999;">Yuklab olish mavjud emas</span>';
+          let downloadButtonHtml = `<a class="download-button disabled-button" style="background-color: #555; cursor: not-allowed;">Yuklab olish mavjud emas</a>`;
 
           if (file.base64Data) {
               const fileBlob = base64toBlob(file.base64Data, getMimeType(file.fileName));
               if (fileBlob) {
                   blobUrl = URL.createObjectURL(fileBlob);
-                  downloadLinkHtml = `<a href="${blobUrl}" download="${file.fileName}" class="file-download-link" style="color: white; text-align: center;  text-decoration: none; background-color: #4a64e0 ;width: 120px; height: 40px; border-radius: 5px;">Yuklab olish</a>`;
+                  // YANGI: button elementidan foydalanish
+                  downloadButtonHtml = `<a href="${blobUrl}" download="${file.fileName}" class="download-button">Yuklab olish</a>`;
               }
           }
 
-          educationalFileDetailArea.innerHTML = `
-              <h3>${file.fileName}</h3>
-              <p class="uploader-info">Qo'shuvchi: ${file.uploaderName}</p>
-              <p>Yuklangan sana: ${file.uploadDate}</p>
-              ${file.comment ? `<p class="comment-text">Izoh: ${file.comment}</p>` : ''}
-              <p>Holati: <span class="status-dot ${file.status}"></span> ${file.status === 'green' ? 'Tasdiqlangan' : 'Tekshirilmoqda'}</p>
-              ${downloadLinkHtml}
+          // YANGI: Grid-based layout for details
+          currentDetailArea.innerHTML = `
+              <div class="file-details-grid">
+                  <h3 class="file-name-display">${file.fileName}</h3>
+                  
+                  <span class="grid-label">Qo'shuvchi:</span>
+                  <span class="grid-value">${file.uploaderName}</span>
+                  
+                  <span class="grid-label">Yuklangan sana:</span>
+                  <span class="grid-value">${file.uploadDate}</span>
+                  
+                  ${file.comment ? `
+                      <span class="grid-label">Izoh:</span>
+                      <span class="grid-value">${file.comment}</span>
+                  ` : ''}
+                  
+                  <span class="grid-label">Holati:</span>
+                  <span class="grid-value"><span class="status-dot ${file.status}"></span> ${file.status === 'green' ? 'Tasdiqlangan' : 'Tekshirilmoqda'}</span>
+              </div>
+              ${downloadButtonHtml}
           `;
-      } else {
-          educationalFileDetailArea.innerHTML = '<h3>Ma\'lumot topilmadi</h3><p>Yuqoridagi ro\'yxatdan fayl tanlang.</p>';
+      } else if (currentDetailArea) {
+          currentDetailArea.innerHTML = '<h3>Ma\'lumot topilmadi</h3><p>Yuqoridagi ro\'yxatdan fayl tanlang.</p>';
       }
   }
 
 
   // --- Initial Load ---
-  // Show the default tab ('methods') when the page loads
   showTab('methods');
 });

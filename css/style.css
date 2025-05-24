@@ -11,45 +11,61 @@ html, body {
     font-family: 'Inter', sans-serif;
     background-color: #171C28;
     color: white;
+    /* YANGILANGAN: Gorizontal scrollni to'liq yo'qotish uchun */
+    overflow-x: hidden; 
 }
 
 .container {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* Konteynerning o'zida ham overflow-x ni ta'minlash */
     overflow-x: hidden;
 }
 
 /* ===== HEADER ===== */
 .header {
     background-color: #4a64e0;
-    padding: 1rem 2rem;
+    padding: 1rem 0; /* Vertikal paddingni qoldirib, gorizontalni 0 qildik */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .header_section {
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Elementlarni ikki chetga joylashtirish */
+    padding: 0 2rem; /* Konteynerga padding berish */
+    width: 100%; /* Kenglikni to'liq olish */
+    /* YANGILANGAN: Kichik ekranlarda header elementlari siqilib ketmasligi uchun min-width */
+    min-width: 320px; /* Masalan, eng kichik telefon ekraniga mos */
+}
+
+/* YANGI: Header ichidagi guruhlar uchun stil */
+.header-left-group,
+.header-right-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Elementlar orasidagi bo'sh joy */
+    /* YANGILANGAN: Kichik ekranlarda shrift o'lchamini pasaytirish */
+    flex-shrink: 0; /* Elementlar kichraymasligi uchun */
 }
 
 .logo {
     width: 3rem;
     height: 3rem;
-    margin-left: 2rem;
 }
 
 .title {
     font-weight: bold;
-    margin-left: 1rem;
     font-size: 1.5rem;
+    /* margin-left olib tashlandi, gap parentga berildi */
 }
 
 .sign-in {
     font-weight: bold;
-    margin-left: auto;
-    margin-right: 1rem;
     cursor: pointer;
     transition: color 0.3s ease;
+    /* margin-right olib tashlandi, gap parentga berildi */
 }
 
 .sign-in:hover {
@@ -64,7 +80,6 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 2rem;
     transition: background-color 0.3s ease;
     cursor: pointer;
 }
@@ -78,7 +93,7 @@ html, body {
     height: 2rem;
 }
 
-/* ===== HEADER CONTENT (Tabs) ===== */
+/* ===== HEADER CONTENT (Tabs) - YANGILANGAN ===== */
 .header_content {
     background-color: #232935;
     padding: 0.5rem 2rem;
@@ -86,14 +101,23 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: flex-start; /* Chap tomonga tekislash */
+    /* Scrollbar muammosi va ko'k kvadratni hal qilish uchun */
+    /* overflow-x: auto; */ /* Olib tashlandi, agar tablar ko'payib ketsa, responsivega alohida stil beramiz */
+    /* white-space: nowrap; */ /* Olib tashlandi */
+    /* Ko'k kvadratni yo'qotish uchun border/outline tekshiruvi */
+    border: none !important; /* Agar border bo'lsa, o'chiramiz */
+    outline: none !important; /* Agar outline bo'lsa, o'chiramiz */
 }
 
+
 .header_tabs {
-    display: inline-flex;
+    display: flex; /* inline-flex o'rniga flex qildik */
     gap: 20px;
     list-style: none;
     padding: 0;
     margin: 0;
+    /* Agar tablar ekran kengligidan oshsa, keyingi qatorga o'tish */
+    flex-wrap: wrap; 
 }
 
 .header_tabs.hidden {
@@ -101,46 +125,47 @@ html, body {
 }
 
 .header_tabs li {
-    padding: 10px 0; /* Paddingni gorizontalga olib tashladik */
+    padding: 10px 0; /* Vertikal paddingni qoldirdik */
     color: white;
-    background-color: transparent; /* Fonni olib tashladik */
-    border-radius: 0; /* Border radiusni olib tashladik */
+    background-color: transparent;
+    border-radius: 0;
     cursor: pointer;
-    transition: color 0.3s, font-weight 0.3s; /* Faqat rang va font-weightga transition */
+    transition: color 0.3s, font-weight 0.3s;
     display: flex;
     align-items: center;
     gap: 5px;
+    /* Yangilangan: Ko'k kvadrat muammosi uchun */
+    border: none !important;
+    outline: none !important;
 }
 
 .header_tabs li:hover {
-    background-color: transparent; /* Hoverda ham fon bo'lmasligi uchun */
-    color: #cdd9ff; /* Hoverda rang o'zgarishi */
+    background-color: transparent;
+    color: #cdd9ff;
 }
 
 .header_tabs li.active {
-    background-color: transparent; /* Active tabda ham fon bo'lmasligi uchun */
-    font-weight: bold; /* Active tabda matn bold bo'ladi */
-    color: #4a64e0; /* Active tabda rang o'zgarishi */
+    background-color: transparent;
+    font-weight: bold;
+    color: #4a64e0;
 }
 
-/* O'quv ishlari bo'yicha back button uchun maxsus tab */
 .header_tabs li.active-special {
-    background-color: transparent; /* Fonni olib tashladik */
-    font-weight: bold; /* Active tabda matn bold bo'ladi */
-    color: #4a64e0; /* Active tabda rang o'zgarishi */
+    background-color: transparent;
+    font-weight: bold;
+    color: #4a64e0;
 }
-
 
 .header_tabs .back-arrow {
     font-size: 20px;
     cursor: pointer;
     margin-right: 5px;
-    color: white; /* O'q rangi oq bo'lsin */
+    color: white;
     transition: color 0.3s;
 }
 
 .header_tabs .back-arrow:hover {
-    color: #cdd9ff; /* Hoverda o'q rangi o'zgarishi */
+    color: #cdd9ff;
 }
 
 
@@ -150,21 +175,22 @@ html, body {
     gap: 20px;
     padding: 20px;
     flex: 1;
-    min-height: calc(100vh - 150px); /* Adjust based on header/footer height */
+    min-height: calc(100vh - 150px);
+    /* Kichik ekranlarda gorizontal scrollni oldini olish uchun */
+    overflow-x: hidden;
 }
 
 .tab-content {
-    display: none; /* Hidden by default */
-    flex: 1; /* Take full width of parent */
-    gap: 20px; /* Gap between left/right content within a tab */
-    flex-direction: row; /* ALL tab-contents will be row-based (left/right panels) */
+    display: none;
+    flex: 1;
+    gap: 20px;
+    flex-direction: row;
 }
 
 .tab-content.active-tab {
-    display: flex; /* Show active tab content */
+    display: flex;
 }
 
-/* Layout for all main panels (content_left / content_right) */
 .content_left,
 .content_right {
     padding: 1.5rem;
@@ -175,7 +201,7 @@ html, body {
     min-height: 400px;
     position: relative;
     display: flex;
-    flex-direction: column; /* Inner content stacks vertically */
+    flex-direction: column;
 }
 
 .content_left {
@@ -186,20 +212,52 @@ html, body {
     flex: 0.65;
     padding: 20px;
     box-sizing: border-box;
-    overflow-y: auto; /* Add scrollbar for overflow */
-    max-height: calc(100vh - 200px); /* Adjust max height for scroll */
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
 }
 
-/* YANGI: "O‘quv ishlari bo‘yicha" tabidagi panellar uchun maxsus stil */
+/* "O‘quv ishlari bo‘yicha" tabidagi panellar uchun maxsus stil */
 #educationalContent .content_left {
-    background-color: #262c3a; /* Aslidan sal to'qroq */
-    border-right: 1px solid rgba(255, 255, 255, 0.1); /* Yumshoq chegara */
+    background-color: #262c3a;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #educationalContent .content_right {
-    background-color: #30374a; /* Aslidan sal ochroq */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); /* Kuchliroq soya */
-    border-left: 1px solid #4a64e0; /* Yorqinroq chegara */
+    background-color: #30374a;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    border-left: 1px solid #4a64e0;
+}
+
+/* YANGI: educationalFileDetailArea ichidagi ma'lumotlar uchun grid */
+.file-details-grid {
+    display: grid;
+    /* Label va value uchun ikkita ustun. Label o'z mazmuniga qarab kengayadi, value qolgan joyni egallaydi. */
+    grid-template-columns: auto 1fr; 
+    gap: 10px 20px; /* Qator va ustunlar orasidagi bo'sh joy */
+    align-items: center; /* Elementlarni vertikal o'rtaga joylash */
+    margin-top: 15px; /* Detail area headerdan pastga surish */
+}
+
+.file-details-grid .grid-label {
+    font-weight: bold;
+    color: #f0f0f0;
+    text-align: right; /* Labelarni o'ng tomonga tekislash */
+    padding-right: 10px; /* Label va value orasida bo'sh joy */
+}
+
+.file-details-grid .grid-value {
+    color: #cdd9ff;
+    word-break: break-word; /* Uzoq so'zlarni yangi qatorga o'tkazish */
+}
+
+/* Fayl nomi alohida katta bo'lishi mumkin */
+.file-details-grid .file-name-display {
+    grid-column: 1 / -1; /* To'liq kenglikni egallash */
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #4a64e0;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 
@@ -343,7 +401,7 @@ html, body {
     color: red;
 }
 
-/* YANGI: In-place edit elementlari uchun stil */
+/* In-place edit elementlari uchun stil */
 .comment-edit-area {
     display: flex;
     flex-direction: column;
@@ -364,7 +422,7 @@ html, body {
 
 .comment-edit-actions {
     display: flex;
-    justify-content: flex-end; /* Tugmalarni o'ng tomonga tekislash */
+    justify-content: flex-end;
     gap: 10px;
 }
 
@@ -388,7 +446,7 @@ html, body {
 }
 
 .comment-edit-cancel-btn {
-    background-color: #e74c3c; /* Red */
+    background-color: #e74c3c;
     color: white;
 }
 
@@ -428,18 +486,44 @@ html, body {
 .simplified-file-item .status-dot.green { background-color: green; }
 .simplified-file-item .status-dot.red { background-color: red; }
 
+
+/* YANGI: Yuklab olish tugmasi stili */
+.download-button {
+    display: block; /* To'liq kenglikni egallashi uchun */
+    width: 150px; /* Aniqlangan kenglik */
+    margin: 15px ; /* Vertikal margin va gorizontalda o'rtaga joylash */
+    padding: 10px 15px;
+    background-color: #4a64e0;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.download-button:hover {
+    background-color: #3a50b5;
+    transform: translateY(-2px); /* Kichik animatsiya */
+}
+
+.download-button:active {
+    transform: translateY(0);
+}
+
 /* Styles for the detail area within educationalContent's content_right */
 .detail-area-inner {
     padding: 15px;
     background-color: #232935;
     border-radius: 8px;
     border: 1px solid #4a64e0;
-    flex-grow: 1; /* Take up remaining space */
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-top: 20px; /* Space from the H2 above it */
-    /* display: flex; */
+    margin-top: 20px;
 }
 .detail-area-inner h3 {
     margin-bottom: 10px;
@@ -454,7 +538,7 @@ html, body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    display: none; /* Hidden by default */
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 1000;
@@ -492,7 +576,7 @@ html, body {
 }
 
 .modal-actions .confirm-btn {
-    background-color: #e74c3c; /* Red */
+    background-color: #e74c3c;
     color: white;
 }
 
@@ -501,7 +585,7 @@ html, body {
 }
 
 .modal-actions .cancel-btn {
-    background-color: #3498db; /* Blue */
+    background-color: #3498db;
     color: white;
 }
 
@@ -513,7 +597,7 @@ html, body {
 /* Footer */
 .footer {
     text-align: center;
-    padding: 1rem;
+    padding: 0.7rem;
     background-color: #1d222f;
     font-size: 0.9rem;
     color: #999;
@@ -522,7 +606,7 @@ html, body {
 /* Responsive */
 @media (max-width: 768px) {
     .content,
-    .tab-content { /* All tab contents will stack vertically */
+    .tab-content {
         flex-direction: column;
         padding: 10px;
     }
@@ -531,7 +615,7 @@ html, body {
     .content_right {
         width: 100%;
         min-height: 250px;
-        max-height: unset; /* Remove max-height on small screens */
+        max-height: unset;
     }
     
     .header_tabs {
@@ -554,17 +638,23 @@ html, body {
         width: 90%;
         padding: 1.5rem;
     }
-}
-.methods-simplified-card{
-  margin-top: 5px;
-  width: 100%;
-  padding: 10px;
-  background-color: #394056;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+
+    /* Educational content responsive adjustments */
+    #educationalContent .content_left,
+    #educationalContent .content_right {
+        border: none; /* Kichik ekranlarda chegarani olib tashlash */
+        box-shadow: none; /* Soyani ham olib tashlash */
+    }
+    /* Yangilangan: Header guruhlari kichik ekranlarda */
+    .header-left-group,
+    .header-right-group {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        gap: 0.5rem;
+    }
+    .header_section {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }
