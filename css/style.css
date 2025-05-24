@@ -86,14 +86,14 @@ html, body {
   height: 30px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
 }
-
+/* 
 .header_content {
   background-color: #232935;
   padding: 20px;
   text-align: center;
-}
+} */
 
 .header_tabs {
   display: inline-flex; /* centerda turadi */
