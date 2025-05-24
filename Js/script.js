@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
               const fileBlob = base64toBlob(file.base64Data, getMimeType(file.fileName));
               if (fileBlob) {
                   blobUrl = URL.createObjectURL(fileBlob);
-                  downloadLinkHtml = `<a href="${blobUrl}" download="${file.fileName}" class="file-download-link" style="color: #4a64e0; text-decoration: none;">Yuklab olish</a>`;
+                  downloadLinkHtml = `<a href="${blobUrl}" download="${file.fileName}" class="file-download-link" style="color: white; text-align: center;  text-decoration: none; background-color: #4a64e0 ;width: 120px; height: 40px; border-radius: 5px;">Yuklab olish</a>`;
               }
           }
 
