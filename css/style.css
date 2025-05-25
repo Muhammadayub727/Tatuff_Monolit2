@@ -378,7 +378,7 @@ html, body {
 .download-button {
     display: block;
     width: 150px;
-    margin: 15px;
+    margin: 15px ;
     padding: 10px 15px;
     background-color: #4a64e0;
     color: white;
