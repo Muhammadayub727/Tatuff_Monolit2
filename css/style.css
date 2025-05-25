@@ -378,7 +378,7 @@ html, body {
 .download-button {
     display: block;
     width: 150px;
-    margin: 15px auto 0 auto;
+    margin: 15px;
     padding: 10px 15px;
     background-color: #4a64e0;
     color: white;
@@ -407,7 +407,8 @@ html, body {
 }
 
 .file-image-preview {
-    max-width: 100%;
+    max-width: 150px;
+    height: 150px;
     height: auto;
     margin-top: 10px;
     border-radius: 8px;
@@ -494,7 +495,7 @@ html, body {
 
 .footer {
     text-align: center;
-    padding: 1rem;
+    padding: 0.7rem;
     background-color: #1d222f;
     font-size: 0.9rem;
     color: #999;
